@@ -11,19 +11,21 @@ bot = Bot(BOT_TOKEN)
 disp = Dispatcher()
 
 
-@disp.message(Command(commands=('start',)))
 async def start_cmnd_answer(msg: Message):
     await msg.answer('Рад приветствовать Вас в нашей таверне =)')
 
 
-@disp.message(Command(commands=('help',)))
 async def help_cmnd_answer(msg: Message):
     await msg.answer('Чем я могу Вам помочь?')
 
 
-@disp.message()
 async def any_msg_answer(msg: Message):
     await msg.reply(f'Сам ты - {msg.text}')
+
+disp.message.register(start_cmnd_answer, Command(commands=('start',)))
+disp.message.register(help_cmnd_answer, Command(commands=('help',)))
+disp.message.register(any_msg_answer)
+
 
 if __name__ == '__main__':
     disp.run_polling(bot)
