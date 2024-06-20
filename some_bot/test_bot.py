@@ -36,12 +36,16 @@ async def GIF_answer(msg: Message):
     await msg.reply_sticker(sticker=msg.animation.file_id)
 
 
+async def copy_answer(msg: Message):
+    await msg.send_copy(chat_id=msg.chat.id)
+
+
 disp.message.register(start_cmnd_answer, Command(commands=('start',)))
 disp.message.register(help_cmnd_answer, Command(commands=('help',)))
-# this for example, after use F.<content_type>
 disp.message.register(photo_msg_answer, F.content_type == ContentType.PHOTO)
 disp.message.register(sticker_answer, F.sticker)
 disp.message.register(GIF_answer, F.animation)
+disp.message.register(copy_answer, )
 disp.message.register(any_msg_answer)
 
 if __name__ == '__main__':
