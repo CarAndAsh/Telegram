@@ -1,7 +1,21 @@
-import json
+from aiogram import Bot, Dispatcher
+from aiogram.types import Message
 
-with open('tokens.json') as f:
-    j = json.load(f)
-    BOT_TOKEN = j['test_zeixes_bot token']
+from config import load_config
+from log_cofig import logger
 
-# Bot for converting color scheme of image
+config = load_config('./.env')
+logger.info('config loads')
+bot = Bot(config.tg_bot.token)
+dp = Dispatcher()
+
+
+async def echo(msg: Message):
+    logger.info(f'bot get message: {msg.text}')
+    await msg.answer(msg.text)
+
+
+dp.message.register(echo)
+if __name__ == '__main__':
+    logger.debug('bot is running')
+    dp.run_polling(bot)
