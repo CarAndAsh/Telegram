@@ -7,12 +7,9 @@ from log_config import logger
 other_router: Router = Router()
 
 
-async def echo(msg: Message):
+async def process_other_answer(msg: Message):
     logger.info(f'get message: {msg.text}')
-    try:
-        await msg.send_copy(chat_id=msg.chat.id)
-    except TypeError:
-        await msg.reply(LEXICON_RU['no_echo'])
+    await msg.reply(LEXICON_RU['other'])
 
 
-other_router.message.register(echo, )
+other_router.message.register(process_other_answer, )
