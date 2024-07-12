@@ -6,7 +6,7 @@ formatter = Formatter(fmt=format, style='{')
 
 stream = StreamHandler(stdout)
 stream.setFormatter(formatter)
-to_file = FileHandler('log.txt', 'w')
+to_file = FileHandler('log.txt', 'w', encoding='utf-8')
 to_file.setFormatter(formatter)
 
 logger = getLogger()
