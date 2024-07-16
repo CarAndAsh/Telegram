@@ -1,5 +1,5 @@
 from random import choice
-from lexicon.lexicon_ru import LEXICON_RU
+from lexicon.lexicon_ru import LEXICON_KB_RU
 
 RULES = {'rock': ('scissors', 'lizard'),
          'scissors': ('paper', 'lizard'),
@@ -13,8 +13,8 @@ def get_bot_choice():
 
 
 def _normalize_user_chioce(user_choice):
-    for key in LEXICON_RU:
-        if LEXICON_RU[key] == user_choice:
+    for key in LEXICON_KB_RU:
+        if LEXICON_KB_RU[key] == user_choice:
             return key
 
 
