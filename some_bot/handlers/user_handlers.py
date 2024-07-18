@@ -1,6 +1,7 @@
 from aiogram import Router, F
 from aiogram.filters import Command, CommandStart
-from aiogram.types import Message, ReplyKeyboardRemove
+from aiogram.types import Message, CallbackQuery
+from aiogram.enums import ParseMode
 
 from lexicon.lexicon_ru import LEXICON_RU, LEXICON_KB_RU
 from keyboards.keyboards import yn_keyboard, game_keyboard
@@ -12,35 +13,34 @@ user_router: Router = Router()
 
 async def start_command(msg: Message):
     logger.debug('Player send start command')
-    await msg.answer(text=LEXICON_RU['/start'], reply_markup=yn_keyboard)
+    await msg.answer(text=LEXICON_RU['/start'], reply_markup=yn_keyboard, parse_mode=ParseMode.HTML)
 
 
 async def help_command(msg: Message):
     logger.debug('Player send help command')
-    await msg.answer(text=LEXICON_RU['/help'], reply_markup=yn_keyboard)
+    await msg.answer(text=LEXICON_RU['/help'], reply_markup=yn_keyboard, parse_mode=ParseMode.HTML)
 
 
-async def agree_btn(msg: Message):
+async def agree_btn(callb: CallbackQuery):
     logger.debug('Player push button for agree')
-    await msg.answer(text=LEXICON_KB_RU['yes'], reply_markup=game_keyboard)
+    await callb.message.edit_text(text=LEXICON_RU[callb.data], reply_markup=game_keyboard)
 
 
-async def disagree_btn(msg: Message):
+async def disagree_btn(callb: CallbackQuery):
     logger.debug('Player push button for disagree')
-    await msg.answer(text=LEXICON_KB_RU['disagree'], reply_markup=ReplyKeyboardRemove())
+    await callb.message.edit_text(text=LEXICON_RU[callb.data], reply_markup=yn_keyboard)
 
 
-async def game_btn(msg: Message):
+async def game_btn(callb: CallbackQuery):
     bot_choice = get_bot_choice()
-    logger.debug('Player made his choise')
-    await msg.answer(text=f'{LEXICON_RU["bot_choice"]} {LEXICON_KB_RU[bot_choice]}')
-    winner = get_winner(msg.text, bot_choice)
-    await msg.answer(text=LEXICON_RU[winner], reply_markup=yn_keyboard)
+    logger.debug(f'Player made his choise. {callb.data} goes to check winner')
+    winner = get_winner(callb.data, bot_choice)
+    await callb.message.edit_text(text=f'{LEXICON_RU["bot_choice"]}{LEXICON_KB_RU[bot_choice]}\n\n{LEXICON_RU[winner]}',
+                                  reply_markup=yn_keyboard)
 
 
 user_router.message.register(start_command, CommandStart())
 user_router.message.register(help_command, Command(commands='help', prefix='/'))
-user_router.message.register(agree_btn, F.text == LEXICON_KB_RU['yes'])
-user_router.message.register(disagree_btn, F.text.in_((LEXICON_KB_RU['no'], LEXICON_KB_RU['remind'])))
-user_router.message.register(game_btn, F.text.in_(
-    (LEXICON_KB_RU.values())))
+user_router.callback_query.register(agree_btn, F.data == 'agree')
+user_router.callback_query.register(disagree_btn, F.data.in_(('disagree', 'remind')))
+user_router.callback_query.register(game_btn, F.data.in_(LEXICON_KB_RU.keys()))
