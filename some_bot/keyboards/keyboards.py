@@ -1,7 +1,10 @@
 from aiogram.utils.keyboard import (ReplyKeyboardBuilder, KeyboardButton, ReplyKeyboardMarkup)
+from lexicon.lexicon_ru import LEXICON_KB_RU
 
 
-def in_line_kb() -> ReplyKeyboardMarkup:
+def inline_kb(kb: str) -> ReplyKeyboardMarkup:
     kb_builder = ReplyKeyboardBuilder()
-    kb_builder.row(*[KeyboardButton(text=f'{btn + 1}', callback_data=str(btn)) for btn in range(4)])
-    return kb_builder.as_markup()
+    kb_builder.row(*[KeyboardButton(text=LEXICON_KB_RU[kb][btn], callback_data=btn) for btn in LEXICON_KB_RU[kb]])
+    keyboard: ReplyKeyboardMarkup = kb_builder.as_markup()
+    keyboard.resize_keyboard = True
+    return keyboard
