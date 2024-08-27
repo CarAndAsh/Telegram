@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from environs import Env
-from log_cofig import logger
+from log_config import logger
 
 
 @dataclass

@@ -1,7 +1,7 @@
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 
-from log_cofig import logger
+from log_config import logger
 
 other_router = Router()
 

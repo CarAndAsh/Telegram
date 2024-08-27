@@ -1,22 +1,25 @@
-import PIL
-from aiogram import Bot
-from log_cofig import logger
+from io import BytesIO
+
+from PIL import Image
+
+from log_config import logger
+
+operations = {
+    'mirror h': lambda x: x.transpose(Image.Transpose.FLIP_TOP_BOTTOM),
+    'mirror v': lambda x: x.transpose(Image.Transpose.FLIP_LEFT_RIGHT),
+    'rotate h': lambda x: x.transpose(Image.Transpose.ROTATE_90),
+    'rotate -h': lambda x: x.transpose(Image.Transpose.ROTATE_270),
+    'switch scheme': lambda x: x.convert('CMYK') if x.mode == 'RGB' else x.convert('RGB')
+}
 
 
-def edit_image(image_id: str, operation_id: int):
-    match operation_id:
-        case 1:
-            logger.info(f'1')
-            return image_id
-        case 2:
-            logger.info('2')
-            return image_id
-        case 3:
-            logger.info('3')
-            return image_id
-        case 4:
-            logger.info('4')
-            return image_id
-        case 5:
-            logger.info('5')
-            return image_id
+def edit_image(image_file: BytesIO, operation: str):
+    logger.info('bot get image')
+    with Image.open(image_file) as image:
+        image.load()
+    edited_image = operations[operation](image)
+
+    image.seek(0)
+    image_file.seek(0)
+    image_file.truncate()
+    edited_image.save(image_file, image.format)
