@@ -1,7 +1,7 @@
 from logging import getLogger, DEBUG, Formatter, StreamHandler, FileHandler
 from sys import stdout
 
-format = '[{asctime}]\t{levelname}\t{name}:{lineno}\t{filename}\n{message}'
+format = '[{asctime}]\t{levelname}\t{name}:{lineno}\t{filename}\t{message}'
 formatter = Formatter(fmt=format, style='{')
 
 stream = StreamHandler(stdout)

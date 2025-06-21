@@ -14,12 +14,10 @@ operations = {
 
 
 def edit_image(image_file: BytesIO, operation: str):
-    logger.info('bot get image')
+    logger.info(f'бот получил файл для {operation}')
     with Image.open(image_file) as image:
         image.load()
     edited_image = operations[operation](image)
 
-    image.seek(0)
     image_file.seek(0)
-    image_file.truncate()
-    edited_image.save(image_file, image.format)
+    edited_image.save(image_file, image.format, mode=image.mode)

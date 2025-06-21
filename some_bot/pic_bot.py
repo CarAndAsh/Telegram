@@ -15,7 +15,7 @@ from log_config import logger
 """
 
 config = load_config('./.env')
-logger.info('config loads')
+logger.info('загрузка конфигурации')
 pic_bot = Bot(config.tg_bot.token)
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
@@ -27,14 +27,14 @@ async def main_func():
     bot_name = await pic_bot.get_my_name()
     bot_short_desc = await pic_bot.get_my_short_description()
     bot_desc = await pic_bot.get_my_description()
-    logger.info('Start bot')
+    logger.info('запуск бота')
     if bot_name.name != LEXICON_FACE_BOT_RU['name']:
         await pic_bot.set_my_name(name=LEXICON_FACE_BOT_RU['name'])
     if bot_short_desc.short_description != LEXICON_FACE_BOT_RU['short_desc']:
         await pic_bot.set_my_short_description(short_description=LEXICON_FACE_BOT_RU['short_desc'])
     if bot_desc.description != LEXICON_FACE_BOT_RU['desc']:
         await pic_bot.set_my_description(description=LEXICON_FACE_BOT_RU['desc'])
-    logger.debug('bot is running')
+    logger.debug('бот запущен')
     await pic_bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(pic_bot)
 

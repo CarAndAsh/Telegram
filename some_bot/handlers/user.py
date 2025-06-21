@@ -19,24 +19,24 @@ user_router = Router()
 
 async def process_start(msg: Message):
     user_full_name = msg.from_user.full_name
-    logger.info(f'{user_full_name} start work with bot')
+    logger.info(f'{user_full_name} начинает работу с ботом')
     await msg.answer(LEXICON_RU[msg.text].format(user_full_name))
 
 
 async def process_help(msg: Message):
-    logger.info(f'{msg.from_user.full_name} ask help info from bot')
+    logger.info(f'{msg.from_user.full_name} запрашивает справочную инфу по боту')
     await msg.answer(LEXICON_RU[msg.text])
 
 
 async def get_image(msg: Message, state: FSMContext):
-    logger.info(f'bot get image')
+    logger.info(f'бот получил изображение')
     pic_id = msg.photo[-1].file_id
     await msg.answer_photo(pic_id, caption='Это ваше фото.\n Что бы вы хотели с ним сделать?',
                            reply_markup=in_line_kb())
 
 
 async def get_imagefile(msg: Message, state: FSMContext, bot: Bot):
-    logger.info(f'bot get file')
+    logger.info(f'бот получил изображение как файл')
     state_data = {}
 
     doc_id = msg.document.file_id
@@ -83,7 +83,7 @@ async def process_imagefile(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_media(
         media=InputMediaPhoto(
             media=BufferedInputFile(state_data['user_file_bin'].read1(), ''),
-            caption='я подменил фото'),
+            caption=f'я подменил фото, цвет.схема '),
         reply_markup=in_line_kb())
 
 

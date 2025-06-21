@@ -7,12 +7,12 @@ other_router = Router()
 
 
 async def echo(msg: Message):
-    logger.info(f'bot get message: {msg.text}')
+    logger.info(f'бот получил сообщение: {msg.text}')
     await msg.answer(msg.text)
 
 
 async def process_other_callback(callback: CallbackQuery):
-    logger.info('user do something wrong with callbacks')
+    logger.info(f'{callback.from_user.full_name} что-то делает не так')
     await callback.answer()
 
 other_router.message.register(echo, )
