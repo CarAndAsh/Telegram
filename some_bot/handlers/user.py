@@ -11,7 +11,7 @@ from aiogram.types import Message, CallbackQuery, InputMediaPhoto, BufferedInput
 from log_config import logger
 from lexicon.lexicon_ru import LEXICON_RU, LEXICON_KB
 from keyboards.in_line import in_line_kb
-from services.services import edit_image
+from services.services import get_mode_edit_image
 from handlers.FSM import FSMImageEditor
 
 user_router = Router()
@@ -77,13 +77,13 @@ async def end_editing_imagefile(callback: CallbackQuery, state: FSMContext):
 async def process_imagefile(callback: CallbackQuery, state: FSMContext):
     logger.info('bot get our callback')
     state_data = await state.get_data()
-    edit_image(state_data['user_file_bin'], callback.data)
+    pic_mode = get_mode_edit_image(state_data['user_file_bin'], callback.data)
     state_data['user_file_bin'].seek(0)
     await state.update_data(state_data)
     await callback.message.edit_media(
         media=InputMediaPhoto(
             media=BufferedInputFile(state_data['user_file_bin'].read1(), ''),
-            caption=f'я подменил фото, цвет.схема '),
+            caption=f'я подменил фото, цвет.схема {pic_mode}'),
         reply_markup=in_line_kb())
 
 
