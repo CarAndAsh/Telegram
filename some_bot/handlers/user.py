@@ -1,18 +1,16 @@
 from io import BytesIO
 
-from PIL import Image
-
 from aiogram import Router, F, Bot
 from aiogram.filters import CommandStart, Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import default_state
 from aiogram.types import Message, CallbackQuery, InputMediaPhoto, BufferedInputFile
 
-from log_config import logger
-from lexicon.lexicon_ru import LEXICON_RU, LEXICON_KB
-from keyboards.in_line import in_line_kb
-from services.services import get_mode_edit_image
 from handlers.FSM import FSMImageEditor
+from keyboards.in_line import in_line_kb
+from lexicon.lexicon_ru import LEXICON_RU, LEXICON_KB
+from log_config import logger
+from services.services import get_mode_edit_image
 
 user_router = Router()
 
@@ -28,24 +26,16 @@ async def process_help(msg: Message):
     await msg.answer(LEXICON_RU[msg.text])
 
 
-async def get_image(msg: Message, state: FSMContext):
-    logger.info(f'бот получил изображение')
-    pic_id = msg.photo[-1].file_id
-    await msg.answer_photo(pic_id, caption='Это ваше фото.\n Что бы вы хотели с ним сделать?',
-                           reply_markup=in_line_kb())
-
-
 async def get_imagefile(msg: Message, state: FSMContext, bot: Bot):
     logger.info(f'бот получил изображение как файл')
     state_data = {}
-
-    doc_id = msg.document.file_id
+    doc_id = msg.document.file_id if msg.document else msg.photo[-1].file_id
     user_image = await bot.get_file(doc_id)
     path = user_image.file_path
 
     state_data['user_file_bin'] = BytesIO()
     state_data['path'] = path
-    state_data['file_name'] = msg.document.file_name.split('.')
+    state_data['file_name'] = path.split('/')[-1]
     await bot.download_file(path, destination=state_data['user_file_bin'])
     await state.update_data(state_data)
     await msg.answer_photo(
@@ -60,7 +50,7 @@ async def send_edited_imagefile(callback: CallbackQuery, state: FSMContext):
     logger.info('bot sent editted image file')
     state_data = await state.get_data()
     state_data['user_file_bin'].seek(0)
-    file_name = ''.join(state_data['file_name'][:-1]) + 'ed.' + state_data['file_name'][-1]
+    file_name = 'edited_' + state_data['file_name']
     await callback.message.answer_document(
         document=BufferedInputFile(state_data['user_file_bin'].read1(),
                                    filename=file_name),
@@ -89,7 +79,7 @@ async def process_imagefile(callback: CallbackQuery, state: FSMContext):
 
 user_router.message.register(process_start, CommandStart())
 user_router.message.register(process_help, Command(commands='help', prefix='/'))
-user_router.message.register(get_image, F.photo, StateFilter(default_state))
+user_router.message.register(get_imagefile, F.photo, StateFilter(default_state))
 user_router.message.register(get_imagefile, F.document, StateFilter(default_state))
 user_router.callback_query.register(send_edited_imagefile, F.data == 'send_file',
                                     StateFilter(FSMImageEditor.edit_image))
