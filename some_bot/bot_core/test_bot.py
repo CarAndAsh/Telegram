@@ -4,17 +4,19 @@ from aiogram.types import Message
 from bot_core.config import settings
 from bot_core.log_cofig import logger
 
-logger.info('config loads')
+logger.name = __file__
 bot = Bot(settings.tg_bot.token)
+logger.info('Конфигурация загружена')
 dp = Dispatcher()
 
 
 async def echo(msg: Message):
-    logger.info(f'bot get message: {msg.text}')
-    await msg.answer(msg.text)
+    if msg.text:
+        logger.info(f'Поступило сообщение: {msg.text}')
+        await msg.answer(msg.text)
 
 
 dp.message.register(echo)
 if __name__ == '__main__':
-    logger.debug('bot is running')
+    logger.debug('Бот запущен')
     dp.run_polling(bot)
