@@ -1,12 +1,11 @@
 from aiogram import Bot, Dispatcher
 from aiogram.types import Message
 
-from config import load_config
-from log_cofig import logger
+from bot_core.config import settings
+from bot_core.log_cofig import logger
 
-config = load_config('./.env')
 logger.info('config loads')
-bot = Bot(config.tg_bot.token)
+bot = Bot(settings.tg_bot.token)
 dp = Dispatcher()
 
 
