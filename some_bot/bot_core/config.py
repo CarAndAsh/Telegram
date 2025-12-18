@@ -1,14 +1,22 @@
 from pathlib import Path
+from typing import Literal
+
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from log_cofig import logger
+import logging
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+LOG_DEFAULT_FORMAT = "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s"
 
 
 class LogSettings(BaseModel):
-    pass
+    log_level: Literal['debug', 'info', 'warning', 'error', 'critical'] = 'info'
+    log_format: str = LOG_DEFAULT_FORMAT
+
+    @property
+    def log_level_value(self) -> int:
+        return logging.getLevelNamesMapping()[self.log_level.upper()]
 
 
 class TGBotSettings(BaseModel):
@@ -23,6 +31,7 @@ class Settings(BaseSettings):
         extra='ignore'
     )
     tg_bot: TGBotSettings
+    log: LogSettings = LogSettings()
 
 
 settings = Settings()
