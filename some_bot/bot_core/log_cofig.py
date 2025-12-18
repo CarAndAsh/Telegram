@@ -1,12 +1,17 @@
+import os
 from logging import getLogger, DEBUG, Formatter, StreamHandler, FileHandler
 from sys import stdout
 
-format = '[{asctime}]\t{levelname}\t{name}:{lineno}\t{filename}\n{message}'
-formatter = Formatter(fmt=format, style='{')
+from bot_core.config import settings, BASE_DIR
+
+formatter = Formatter(fmt=settings.log.log_format)
 
 stream = StreamHandler(stdout)
 stream.setFormatter(formatter)
-to_file = FileHandler('log.txt', 'w')
+
+if 'logs' not in os.listdir(BASE_DIR):
+    os.mkdir(BASE_DIR / 'logs')
+to_file = FileHandler(BASE_DIR / 'logs' / '.log.txt', 'w')
 to_file.setFormatter(formatter)
 
 logger = getLogger()
