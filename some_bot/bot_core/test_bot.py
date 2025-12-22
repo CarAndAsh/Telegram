@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher
 
 from bot_core.config import settings
 from bot_core.log_cofig import logger
-from handlers.other import other_router
+from handlers import router
 from lexicon.lexicon_ru import BOT_INFO
 
 logger.name = __file__
@@ -27,7 +27,7 @@ async def main():
     logger.info('Конфигурация загружена')
     await name_and_desc_check_and_set(bot)
     dp = Dispatcher()
-    dp.include_router(other_router)
+    dp.include_router(router)
     await dp.start_polling(bot)
 
 
