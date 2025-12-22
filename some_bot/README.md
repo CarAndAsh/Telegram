@@ -8,3 +8,8 @@
 
 #### ***другие***:
 - https://docs.astral.sh/uv/
+
+___
+Контакты автора видео-уроков данного материала:
+
+    https://taplink.cc/mahenzon
