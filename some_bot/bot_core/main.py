@@ -1,10 +1,9 @@
 from asyncio import run
 
-from aiogram import Bot, Dispatcher
+from aiogram import Bot
 
-from bot_core.config import settings
+from bot_core.bot import create_bot, create_dispatcher
 from bot_core.log_cofig import logger
-from handlers import router
 from lexicon.lexicon_ru import BOT_INFO
 
 logger.name = __file__
@@ -23,11 +22,10 @@ async def name_and_desc_check_and_set(bot: Bot):
 
 
 async def main():
-    bot = Bot(settings.tg_bot.token, short_descripton='Базовый бот')
+    bot = create_bot()
     logger.info('Конфигурация загружена')
     await name_and_desc_check_and_set(bot)
-    dp = Dispatcher()
-    dp.include_router(router)
+    dp = create_dispatcher()
     await dp.start_polling(bot)
 
 
