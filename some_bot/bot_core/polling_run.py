@@ -7,9 +7,10 @@ logger.name = __file__
 
 async def main():
     bot = create_bot()
-    await name_and_desc_check_and_set(bot)
+    # await name_and_desc_check_and_set(bot)
     logger.info('Конфигурация загружена')
     dp = create_dispatcher()
+    await bot.delete_webhook(drop_pending_updates=False)
     await dp.start_polling(bot)
 
 
