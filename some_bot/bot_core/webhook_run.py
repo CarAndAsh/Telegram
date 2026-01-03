@@ -3,17 +3,16 @@ from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_applicati
 from aiohttp import web
 
 from bot_core.bot import create_bot, name_and_desc_check_and_set, create_dispatcher
-from bot_core.config import settings
 from bot_core.log_cofig import logger
 
 logger.name = __file__
 
-LOCAL_BOT_HOST = '0.0.0.0'
-LOCAL_BOT_PORT = 8080
+LOCAL_BOT_HOST = '127.0.0.1'
+LOCAL_BOT_PORT = 8000
 
 WEBHOOK_PATH = '/bots/webhook'
 WEBHOOK_SECRET = ''
-WEBHOOK_BASE_URL = 'https://replit.com/@CarAndAsh/Telegram'
+WEBHOOK_BASE_URL = 'https://public.server.url'
 
 
 async def on_startup(bot: Bot) -> None:
@@ -51,6 +50,6 @@ def main() -> None:
     app = create_prepared_web_app()
     web.run_app(app, host=LOCAL_BOT_HOST, port=LOCAL_BOT_PORT)
 
-
-if __name__ == '__main__':
-    main()
+#
+# if __name__ == '__main__':
+#     main()

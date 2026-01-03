@@ -11,4 +11,4 @@ other_router: Router = Router()
 async def echo(msg: Message) -> SendMessage:
     if msg.text:
         logger.info(f'Поступило сообщение: {msg.text}')
-        return msg.answer(msg.text)
+        await msg.answer(msg.text)
